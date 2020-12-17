@@ -36,7 +36,7 @@ export class BufferingOverlay extends Container<BufferingOverlayConfig> {
       cssClass: 'ui-buffering-overlay',
       hidden: true,
       components: this.indicators,
-      showDelayMs: 1000,
+      showDelayMs: 100,
     }, this.config);
   }
 
