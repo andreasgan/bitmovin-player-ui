@@ -664,6 +664,12 @@ export class SeekBar extends Component<SeekBarConfig> {
       this.setSeeking(true); // Set seeking class on DOM element
       seeking = true; // Set seek tracking flag
 
+
+      let targetPercentage = 100 * this.getOffset(e);
+      this.setSeekPosition(targetPercentage);
+      this.setPlaybackPosition(targetPercentage);
+      this.onSeekPreviewEvent(targetPercentage, true);
+
       // Fire seeked event
       this.onSeekEvent();
 
