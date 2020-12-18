@@ -347,10 +347,21 @@ class ActiveSubtitleManager {
   cueEnter(event: SubtitleCueEvent): SubtitleLabel {
     let id = ActiveSubtitleManager.calculateId(event);
 
+    let html = undefined;
+    if (event.html) {
+      html = '';
+      var parts = event.html.split(/<br\/?>/);
+      for (var x = 0; x < parts.length; x++ ) {
+        const part = parts[x];
+        html += '<span>' + part + '</span>';
+        html += '<br>';
+      }
+    }
+
     let label = new SubtitleLabel({
       // Prefer the HTML subtitle text if set, else try generating a image tag as string from the image attribute,
       // else use the plain text
-      text: event.html || ActiveSubtitleManager.generateImageTagText(event.image) || event.text,
+      text: html || ActiveSubtitleManager.generateImageTagText(event.image) || event.text,
       vtt: event.vtt,
       region: event.region,
       regionStyle: event.regionStyle,

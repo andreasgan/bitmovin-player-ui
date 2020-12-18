@@ -33,7 +33,6 @@ const setDefaultVttStyles = (cueContainerDom: DOM, vtt: VTTProperties) => {
     cueContainerDom.css('overflow', 'hidden');
     cueContainerDom.css('flex-flow', 'column');
   }
-  cueContainerDom.css('display', 'inline-flex');
 };
 
 /**
