@@ -23,7 +23,8 @@ stages:
           targets: 'build-prod'
           gulpjs: 'node_modules/gulp/bin/gulp.js'
           enableCodeCoverage: false
-    
+      - publish: dist
+        artifact: publishFiles
   - stage: deploy
     displayName: Deploy
     dependsOn: build
@@ -38,7 +39,7 @@ stages:
             steps:
             - task: AzureFileCopy@4
               inputs:
-                SourcePath: '$(Pipeline.Workspace)/dist/css/bitmovinplayer-ui.min.css'
+                SourcePath: '$(Pipeline.Workspace)/publishFiles/dist/css/bitmovinplayer-ui.min.css'
                 azureSubscription: 'Pay-As-You-Go (304b13b9-d4b5-4016-bb0c-52b4b37213e0)'
                 Destination: 'AzureBlob'
                 storage: 'vods1'
@@ -46,7 +47,7 @@ stages:
                 BlobPrefix: 'bitmovin'
             - task: AzureFileCopy@4
               inputs:
-                SourcePath: '$(Pipeline.Workspace)/dist/js/bitmovinplayer-ui.min.js'
+                SourcePath: '$(Pipeline.Workspace)/publishFiles/dist/js/bitmovinplayer-ui.min.js'
                 azureSubscription: 'Pay-As-You-Go (304b13b9-d4b5-4016-bb0c-52b4b37213e0)'
                 Destination: 'AzureBlob'
                 storage: 'vods1'
