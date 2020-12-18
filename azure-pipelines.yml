@@ -4,12 +4,13 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- script: npm install
 - task: gulp@0
   inputs:
     gulpFile: 'gulpfile.js'
