@@ -9,27 +9,46 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-steps:
-- script: npm install
-- task: gulp@0
-  inputs:
-    gulpFile: 'gulpfile.js'
-    targets: 'build-prod'
-    gulpjs: 'node_modules/gulp/bin/gulp.js'
-    enableCodeCoverage: false
-- task: AzureFileCopy@4
-  inputs:
-    SourcePath: '$(Pipeline.Workspace)/dist/css/bitmovinplayer-ui.min.css'
-    azureSubscription: 'Pay-As-You-Go (304b13b9-d4b5-4016-bb0c-52b4b37213e0)'
-    Destination: 'AzureBlob'
-    storage: 'vods1'
-    ContainerName: 'static'
-    BlobPrefix: 'bitmovin'
-- task: AzureFileCopy@4
-  inputs:
-    SourcePath: '$(Pipeline.Workspace)/dist/js/bitmovinplayer-ui.min.js'
-    azureSubscription: 'Pay-As-You-Go (304b13b9-d4b5-4016-bb0c-52b4b37213e0)'
-    Destination: 'AzureBlob'
-    storage: 'vods1'
-    ContainerName: 'static'
-    BlobPrefix: 'bitmovin'
+stages:
+  - stage: build
+    displayName: Build for prod
+    jobs:
+    - job: build
+      displayName: build Job
+      steps:
+      - script: npm install
+      - task: gulp@0
+        inputs:
+          gulpFile: 'gulpfile.js'
+          targets: 'build-prod'
+          gulpjs: 'node_modules/gulp/bin/gulp.js'
+          enableCodeCoverage: false
+    
+  - stage: deploy
+    displayName: Deploy
+    dependsOn: build
+    condition: succeeded()
+    jobs:
+    - deployment: deploy 
+      displayName: Deploy
+      environment: Production
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+            - task: AzureFileCopy@4
+              inputs:
+                SourcePath: 'dist/css/bitmovinplayer-ui.min.css'
+                azureSubscription: 'Pay-As-You-Go (304b13b9-d4b5-4016-bb0c-52b4b37213e0)'
+                Destination: 'AzureBlob'
+                storage: 'vods1'
+                ContainerName: 'static'
+                BlobPrefix: 'bitmovin'
+            - task: AzureFileCopy@4
+              inputs:
+                SourcePath: 'dist/js/bitmovinplayer-ui.min.js'
+                azureSubscription: 'Pay-As-You-Go (304b13b9-d4b5-4016-bb0c-52b4b37213e0)'
+                Destination: 'AzureBlob'
+                storage: 'vods1'
+                ContainerName: 'static'
+                BlobPrefix: 'bitmovin'
