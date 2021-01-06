@@ -87,6 +87,11 @@
     }
   }
 
+  
+  .#{$prefix}-ui-subtitle-overlay {
+    font-size: 1.4em;
+  }
+
   // Adjustments for screen width x <= 400
   &.#{$prefix}-layout-max-width-400 {
     .#{$prefix}-ui-settings-panel,
